@@ -1,0 +1,10 @@
+**/Debug/
+**/__pycache__/
+
+*.log
+
+.vs/
+**.sln
+**.pyproj
+**.pyproj.filters
+**.pyproj.user
