@@ -6,6 +6,8 @@ class button(object):
         self.png=pygame.image.load(image_path)
         self.font = pygame.font.SysFont('Corbel',25)
         self.texts=[]
+        self.pos=[]
+        self.cur_im_ind=0
 
     def image_at(self,image_size,image_pos,colorkey=None):
         rect = pygame.Rect(image_pos)
@@ -20,9 +22,17 @@ class button(object):
 
     def draw_button(self,screen,i,pos):
         screen.blit(self.images[i],(pos[0]-self.images[i].get_width()//2,pos[1]-self.images[i].get_height()//2))
-        t=self.font.render(self.texts[i],True,(50,50,50))
+        t=self.font.render(self.texts[i][0],True,self.texts[i][1])
         screen.blit(t,(pos[0]-t.get_width()//2,pos[1]-t.get_height()//2))
+        self.pos=pos
+        self.cur_im_ind=i
 
-    def add_button(self,image_size,image_pos,text):
+    def add_button(self,image_size,image_pos,text,text_color=(50,50,50)):
         self.images.append(self.image_at(image_size,image_pos,(0,0,0)))
-        self.texts.append(text)
+        self.texts.append((text,text_color))
+
+    def check_pos_in_button(self,pos):
+        if(pos[0]>=self.pos[0]-self.images[self.cur_im_ind].get_width()//2 and pos[0]<=self.pos[0]+self.images[self.cur_im_ind].get_width()//2 and pos[1]>=self.pos[1]-self.images[self.cur_im_ind].get_height()//2 and pos[1]<=self.pos[1]+self.images[self.cur_im_ind].get_height()//2):
+            return True
+        else:
+            return False
