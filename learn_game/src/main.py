@@ -18,8 +18,8 @@ mouse_pos=[-1,-1]
 cur_mode=0
 next_mode=0
 keys=[]
-for i in range(255):
-    keys.append([False,False])
+for i in range(256):
+    keys.append([False,False,''])
 while(running):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -32,10 +32,13 @@ while(running):
             is_clicked=False
             cur_mode=next_mode
         if event.type == pygame.KEYDOWN:
-            keys[event.key][0]=True
+            if(event.key<256):
+                keys[event.key][0]=True
+                keys[event.key][2]=event.unicode
         if event.type == pygame.KEYUP:
-            keys[event.key][0]=False
-            keys[event.key][1]=False
+            if(event.key<256):
+                keys[event.key][0]=False
+                keys[event.key][1]=False
 
 
     screen.fill((127,127,127))

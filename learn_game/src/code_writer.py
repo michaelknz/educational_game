@@ -67,7 +67,7 @@ class code_writer:
                 elif(i==13):
                     self.code+='\n'
                 else:
-                    self.code+=str(chr(i))
+                    self.code+=keys[i][2]
                 keys[i][1]=True
 
     def draw_text(self,keys):
