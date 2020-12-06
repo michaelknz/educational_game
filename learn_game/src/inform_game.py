@@ -21,7 +21,7 @@ class inform_game(object):
             self.buttons[i].add_button((49,45),(290,95,340,140),str(i+1),(255,255,255))
 
     def init_levels(self):
-        self.levels.append(inf_l_1(self.screen,(200,200)))
+        self.levels.append(inf_l_1(self.screen,(150,100)))
 
     def draw_bg(self):
         self.screen.blit(self.bg,(0,0))
@@ -34,13 +34,13 @@ class inform_game(object):
             else:
                 self.buttons[i].draw_button(self.screen,0,(100+i*25,100))
 
-    def update(self,is_clicked,pos):
+    def update(self,is_clicked,pos,keys):
         if(is_clicked==False):
             self.cur_level=self.next_level
         if(self.cur_level==0):
             self.draw_bg()
             self.draw_buttons(is_clicked,pos)
         else:
-            self.levels[self.cur_level-1].update()
+            self.levels[self.cur_level-1].update(keys)
 
         return 1

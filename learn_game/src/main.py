@@ -17,6 +17,9 @@ is_clicked=False
 mouse_pos=[-1,-1]
 cur_mode=0
 next_mode=0
+keys=[]
+for i in range(255):
+    keys.append([False,False])
 while(running):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -28,12 +31,18 @@ while(running):
             mouse_pos=[-1,-1]
             is_clicked=False
             cur_mode=next_mode
+        if event.type == pygame.KEYDOWN:
+            keys[event.key][0]=True
+        if event.type == pygame.KEYUP:
+            keys[event.key][0]=False
+            keys[event.key][1]=False
+
 
     screen.fill((127,127,127))
     if(cur_mode==0):
         next_mode = start_scr.update(is_clicked,mouse_pos)
     elif(cur_mode==1):
-        next_mode = inform_scr.update(is_clicked,mouse_pos)
+        next_mode = inform_scr.update(is_clicked,mouse_pos,keys)
     pygame.display.flip()
     clock.tick(60)
 

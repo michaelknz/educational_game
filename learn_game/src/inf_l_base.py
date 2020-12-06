@@ -1,4 +1,5 @@
 import pygame
+from code_writer import code_writer
 
 class inf_l_base:
     def __init__(self,screen,tile_size):
@@ -8,9 +9,10 @@ class inf_l_base:
         self.tile_size=tile_size
         self.dict={}
         self.dict_init()
-        self.map_size=(screen.get_width()//self.tile_size[0],screen.get_height()//self.tile_size[1])
+        self.map_size=(screen.get_width()*3//4//self.tile_size[0],screen.get_height()//self.tile_size[1])
         self.map=[]
         self.build_map()
+        self.editor=code_writer(self.screen,(screen.get_width()*3//4,0))
 
     def image_at(self,i,j,colorkey=None):
         rect = pygame.Rect((i*self.tile_tex_size[0],j*self.tile_tex_size[1],(i+1)*self.tile_tex_size[0],(j+1)*self.tile_tex_size[1]))
@@ -33,8 +35,9 @@ class inf_l_base:
                 image=self.image_at(self.dict[self.map[i*self.map_size[0]+j]][0],self.dict[self.map[i*self.map_size[0]+j]][1])
                 self.screen.blit(image,(j*self.tile_size[0],i*self.tile_size[1]))
 
-    def update(self):
+    def update(self,keys):
         self.draw_map()
+        self.editor.draw_ed(keys)
 
     def build_map(self):
         pass
