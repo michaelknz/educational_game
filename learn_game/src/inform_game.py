@@ -41,6 +41,6 @@ class inform_game(object):
             self.draw_bg()
             self.draw_buttons(is_clicked,pos)
         else:
-            self.levels[self.cur_level-1].update(keys)
+            self.levels[self.cur_level-1].update(keys,is_clicked,pos)
 
         return 1

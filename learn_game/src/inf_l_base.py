@@ -1,5 +1,7 @@
 import pygame
 from code_writer import code_writer
+from player import player
+from editor_bar import editor_bar
 
 class inf_l_base:
     def __init__(self,screen,tile_size):
@@ -11,8 +13,14 @@ class inf_l_base:
         self.dict_init()
         self.map_size=(screen.get_width()*3//4//self.tile_size[0],screen.get_height()//self.tile_size[1])
         self.map=[]
+        self.start_pos=0
+        self.fin_pos=0
         self.build_map()
+        self.hero=0
+        self.set_hero()
         self.editor=code_writer(self.screen,(screen.get_width()*3//4,0))
+        self.edb=editor_bar(screen,self.hero,self.editor,(screen.get_width()*3//4,screen.get_height()*7//8))
+        self.syntax_lighting()
 
     def image_at(self,i,j,colorkey=None):
         rect = pygame.Rect((i*self.tile_tex_size[0],j*self.tile_tex_size[1],(i+1)*self.tile_tex_size[0],(j+1)*self.tile_tex_size[1]))
@@ -34,10 +42,19 @@ class inf_l_base:
             for j in range(self.map_size[0]):
                 image=self.image_at(self.dict[self.map[i*self.map_size[0]+j]][0],self.dict[self.map[i*self.map_size[0]+j]][1])
                 self.screen.blit(image,(j*self.tile_size[0],i*self.tile_size[1]))
+                pygame.draw.polygon(self.screen,(255,255,255),[(self.tile_size[0]*j,self.tile_size[1]*i),(self.tile_size[0]*(j+1),self.tile_size[1]*i),(self.tile_size[0]*(j+1),self.tile_size[1]*(i+1)),(self.tile_size[0]*j,self.tile_size[1]*(i+1))],1)
 
-    def update(self,keys):
+    def update(self,keys,is_clicked,pos):
         self.draw_map()
+        self.hero.update(self.start_pos,self.fin_pos)
         self.editor.draw_ed(keys)
+        self.hero = self.edb.update(is_clicked,pos)
 
     def build_map(self):
+        pass
+
+    def syntax_lighting(self):
+        pass
+
+    def set_hero(self):
         pass

@@ -4,16 +4,20 @@ class code_writer:
     def __init__(self,screen,start_pos):
         self.screen=screen
         self.start_pos=start_pos
+        self.bg_color=(20,20,20)
         self.font = pygame.font.SysFont('Corbel',20)
         self.size=(abs(screen.get_width()-start_pos[0]),abs(screen.get_height()-start_pos[1]))
         self.caret=self.image_at("res/UI_1.png",(58,197,66,215),(8,18))
         self.code=""
         self.del_alpha=5
         self.cur_alpha=255
+        self.special=set()
+        self.divisors=set([' ','(',')'])
+        self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100)}
 
     def draw_bg(self):
         bg=pygame.Surface((self.size[0],self.size[1]))
-        bg.fill((20,20,20))
+        bg.fill(self.bg_color)
         self.screen.blit(bg,self.start_pos)
 
     def set_alpha(self,sur,cur):
@@ -45,10 +49,20 @@ class code_writer:
         s=''
         b=False
         for i in line:
-            if(i==' '):
-                t=self.font.render(s+' ',True,(200,100,50))
+            if(i in self.divisors):
+                color=0
+                if(s.isdigit()):
+                    color=self.colors['digits']
+                elif(s in self.special):
+                    color=self.colors['special']
+                else:
+                    color=self.colors['normal']
+                t=self.font.render(s,True,color)
                 self.screen.blit(t,(x,y))
                 x+=t.get_width()
+                t1=self.font.render(i,True,self.colors['divisors'])
+                self.screen.blit(t1,(x,y))
+                x+=t1.get_width()
                 s=''
                 b=True
             else:
@@ -56,7 +70,14 @@ class code_writer:
         if(s=='EOF'):
             self.screen.blit(self.update_caret(),(x-self.font.render(' ',True,(0,0,0)).get_width(),y))
         else:
-            t=self.font.render(s,True,(200,100,50))
+            color=0
+            if(s.isdigit()):
+                color=self.colors['digits']
+            elif(s in self.special):
+                color=self.colors['special']
+            else:
+                color=self.colors['normal']
+            t=self.font.render(s,True,color)
             self.screen.blit(t,(x,y))
 
     def update_code(self,keys):
@@ -66,6 +87,8 @@ class code_writer:
                     self.code=self.code[:-1:]
                 elif(i==13):
                     self.code+='\n'
+                elif(i==9):
+                    self.code+='    '
                 else:
                     self.code+=keys[i][2]
                 keys[i][1]=True
@@ -82,10 +105,13 @@ class code_writer:
         for i in range(len(mas)):
             self.draw_line(mas[i],(x,y))
             x=self.start_pos[0]
-            t=self.font.render(str(j),True,(70,70,70))
+            t=self.font.render(str(j),True,self.colors['str_num'])
             self.screen.blit(t,(x,y))
             j+=1
-            y+=+self.font.render('1',True,(0,0,0)).get_height()*(1.3)
+            y+=self.font.render('1',True,(0,0,0)).get_height()*(1.3)
+
+    def set_lighting(self,s=set()):
+        self.special=s.copy()
 
 
     def draw_ed(self,keys):
