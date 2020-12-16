@@ -124,15 +124,6 @@ class code_writer:
 
     def set_lighting(self,s=set()):
         self.special=s.copy()
-
-    def find_prev_end(self):
-        i=self.caret_pos_in_text-1
-        while(self.code[i]!='\n' and i>0):
-            i-=1
-        if(i==0):
-            return i
-        else:
-            return i+1
         
     def draw_ed(self,keys,is_finished):
         self.draw_bg()
