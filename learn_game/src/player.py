@@ -56,7 +56,10 @@ class player:
             self.animIndex-=7.0
         self.surf=self.move_side[int(self.animIndex)]
 
-    def update(self,start_pos,fin_pos):
+    def update(self,start_pos,fin_pos,is_finished):
+        if(is_finished):
+            self.screen.blit(self.surf,(self.pos[0],self.pos[1]-self.surf.get_height()//2))
+            return 1
         if(len(self.movings)!=0):
             if(self.movings[0][1]==0):
                 self.cur_del=0
@@ -73,12 +76,12 @@ class player:
                 self.surf=self.still
                 if(len(self.movings)==0):
                     if(self.pos_in_quads[0]==fin_pos[0] and self.pos_in_quads[1]==fin_pos[1]):
-                        pass
+                        return 1
                     else:
                         self.pos_in_quads=start_pos.copy()
                         self.pos=[start_pos[0]*self.step[0],start_pos[1]*self.step[1]]
                     self.is_exec=True
-                    return
+                    return 0 
             if(self.cur_del==0):
                 if(self.movings[0][0]== 'r' or self.movings[0][0]== 'l'):
                     self.cur_del=self.step[0]/self.movings[0][1]
@@ -95,4 +98,7 @@ class player:
             self.animation()
             self.movings[0][1]-=1
 
+        else:
+            self.is_exec=True
         self.screen.blit(self.surf,(self.pos[0],self.pos[1]-self.surf.get_height()//2))
+        return 0

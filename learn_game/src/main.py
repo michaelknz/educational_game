@@ -19,7 +19,7 @@ cur_mode=0
 next_mode=0
 keys=[]
 for i in range(256):
-    keys.append([False,False,''])
+    keys.append([False,0,'',0,False])
 while(running):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -35,10 +35,12 @@ while(running):
             if(event.key<256):
                 keys[event.key][0]=True
                 keys[event.key][2]=event.unicode
+                keys[event.key][3]=pygame.time.get_ticks()
         if event.type == pygame.KEYUP:
             if(event.key<256):
                 keys[event.key][0]=False
-                keys[event.key][1]=False
+                keys[event.key][1]=0
+                keys[event.key][4]=False
 
 
     screen.fill((127,127,127))

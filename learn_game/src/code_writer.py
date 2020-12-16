@@ -11,6 +11,8 @@ class code_writer:
         self.code=""
         self.del_alpha=5
         self.cur_alpha=255
+        self.time_delay=25
+        self.first_time_delay=200
         self.special=set()
         self.divisors=set([' ','(',')'])
         self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100)}
@@ -82,8 +84,8 @@ class code_writer:
 
     def update_code(self,keys):
         for i in range(len(keys)):
-            if(keys[i][0]==True and keys[i][1]==False):
-                if(i==8):
+            if(keys[i][0]==True and keys[i][1]<=0):
+                if(i==8 and len(self.code)!=0):
                     self.code=self.code[:-1:]
                 elif(i==13):
                     self.code+='\n'
@@ -91,10 +93,20 @@ class code_writer:
                     self.code+='    '
                 else:
                     self.code+=keys[i][2]
-                keys[i][1]=True
+                if(keys[i][4]==False):
+                    keys[i][1]=self.first_time_delay
+                    keys[i][4]=True
+                else:
+                    keys[i][1]=self.time_delay
+                keys[i][3]=pygame.time.get_ticks()
+            elif(keys[i][0]==True):
+                tmp=pygame.time.get_ticks()
+                keys[i][1]-=abs(keys[i][3]-tmp)
+                keys[i][3]=tmp
 
-    def draw_text(self,keys):
-        self.update_code(keys)
+    def draw_text(self,keys,is_finished):
+        if(not is_finished):
+            self.update_code(keys)
         x=self.start_pos[0]
         y=self.start_pos[1]
         j=1
@@ -113,7 +125,15 @@ class code_writer:
     def set_lighting(self,s=set()):
         self.special=s.copy()
 
-
-    def draw_ed(self,keys):
+    def find_prev_end(self):
+        i=self.caret_pos_in_text-1
+        while(self.code[i]!='\n' and i>0):
+            i-=1
+        if(i==0):
+            return i
+        else:
+            return i+1
+        
+    def draw_ed(self,keys,is_finished):
         self.draw_bg()
-        self.draw_text(keys)
+        self.draw_text(keys,is_finished)

@@ -2,6 +2,7 @@ import pygame
 from code_writer import code_writer
 from player import player
 from editor_bar import editor_bar
+from message_box import message_box
 
 class inf_l_base:
     def __init__(self,screen,tile_size):
@@ -16,10 +17,12 @@ class inf_l_base:
         self.start_pos=0
         self.fin_pos=0
         self.build_map()
+        self.is_finished=False
         self.hero=0
         self.set_hero()
         self.editor=code_writer(self.screen,(screen.get_width()*3//4,0))
         self.edb=editor_bar(screen,self.hero,self.editor,(screen.get_width()*3//4,screen.get_height()*7//8))
+        self.message=message_box(screen)
         self.syntax_lighting()
 
     def image_at(self,i,j,colorkey=None):
@@ -46,9 +49,13 @@ class inf_l_base:
 
     def update(self,keys,is_clicked,pos):
         self.draw_map()
-        self.hero.update(self.start_pos,self.fin_pos)
-        self.editor.draw_ed(keys)
-        self.hero = self.edb.update(is_clicked,pos)
+        self.is_finished=self.hero.update(self.start_pos,self.fin_pos,self.is_finished)
+        self.editor.draw_ed(keys,self.is_finished)
+        if(not self.is_finished):
+            self.hero = self.edb.update(is_clicked,pos)
+        else:
+            self.edb.update(is_clicked,pos)
+            self.message.draw()
 
     def build_map(self):
         pass

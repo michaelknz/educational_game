@@ -27,10 +27,10 @@ class editor_bar:
 
     def execute(self,is_clicked,pos):
         if(is_clicked and self.run.check_pos_in_button(pos) and self.hero.is_exec):
-            h=self.hero
+            boy=self.hero
             exec(self.editor.code)
-            h.is_exec=False
-            self.hero=h
+            boy.is_exec=False
+            self.hero=boy
         return self.hero
 
     def update(self,is_clicked,pos):
