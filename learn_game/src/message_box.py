@@ -1,4 +1,5 @@
 import pygame
+from button import button
 
 class message_box:
     def __init__(self,screen):
@@ -7,6 +8,11 @@ class message_box:
         self.surf.set_colorkey((255,255,255))
         self.path='res/UI_1.png'
         self.load_bg()
+        self.congr_but=button("res/buttons.png")
+        self.congr_but.add_button((190,49),(190,45,380,95),"Уровень пройден!")
+        self.congr_but.add_button((190,45),(0,50,190,95),"Уровень пройден!")
+        self.font=pygame.font.SysFont('Corbel',100)
+
 
     def load_bg(self):
         size=(16,16)
@@ -52,4 +58,20 @@ class message_box:
                     self.surf.blit(mid,(x*size[0],y*size[1]))
 
     def draw(self):
+        image = pygame.image.load('res/congratulations.png')
+        colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
         self.screen.blit(self.surf,(self.screen.get_width()*3//8-self.surf.get_width()//2,self.screen.get_height()//2-self.surf.get_height()//2))
+        self.screen.blit(image,(self.screen.get_width()*2//8+50,self.screen.get_height()*2//8+60))
+        self.congr_but.draw_button(self.screen,0,(self.screen.get_width()*3//8,self.screen.get_height()*5//8))
+        
+        
+
+    def update(self,is_clicked,pos):
+        self.draw()
+        if(is_clicked and self.congr_but.check_pos_in_button(pos)):
+            self.congr_but.draw_button(self.screen,1,(self.screen.get_width()*3//8,self.screen.get_height()*5//8))
+            return 1
+        else:
+            self.congr_but.draw_button(self.screen,0,(self.screen.get_width()*3//8,self.screen.get_height()*5//8))
+            return 0
