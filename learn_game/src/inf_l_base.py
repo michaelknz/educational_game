@@ -55,7 +55,7 @@ class inf_l_base:
             self.hero = self.edb.update(is_clicked,pos)
         else:
             self.edb.update(is_clicked,pos)
-            self.message.draw()
+            self.message.update(is_clicked,pos)
 
     def build_map(self):
         pass
