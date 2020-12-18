@@ -67,11 +67,11 @@ class message_box:
         
         
 
-    def update(self,is_clicked,pos):
+    def update(self,is_clicked,pos,ln):
         self.draw()
         if(is_clicked and self.congr_but.check_pos_in_button(pos)):
             self.congr_but.draw_button(self.screen,1,(self.screen.get_width()*3//8,self.screen.get_height()*5//8))
-            return 1
+            return 0
         else:
             self.congr_but.draw_button(self.screen,0,(self.screen.get_width()*3//8,self.screen.get_height()*5//8))
-            return 0
+            return ln

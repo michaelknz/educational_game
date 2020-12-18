@@ -16,11 +16,12 @@ class inf_l_base:
         self.map=[]
         self.start_pos=0
         self.fin_pos=0
+        self.level_num=0
         self.build_map()
         self.is_finished=False
         self.hero=0
-        self.set_hero()
         self.editor=code_writer(self.screen,(screen.get_width()*3//4,0))
+        self.set_hero()
         self.edb=editor_bar(screen,self.hero,self.editor,(screen.get_width()*3//4,screen.get_height()*7//8))
         self.message=message_box(screen)
         self.syntax_lighting()
@@ -55,7 +56,8 @@ class inf_l_base:
             self.hero = self.edb.update(is_clicked,pos)
         else:
             self.edb.update(is_clicked,pos)
-            self.message.update(is_clicked,pos)
+            return self.message.update(is_clicked,pos,self.level_num)
+        return self.level_num
 
     def build_map(self):
         pass
