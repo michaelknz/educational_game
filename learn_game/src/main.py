@@ -18,7 +18,7 @@ mouse_pos=[-1,-1]
 cur_mode=0
 next_mode=0
 keys=[]
-for i in range(256):
+for i in range(258):
     keys.append([False,0,'',0,False])
 while(running):
     for event in pygame.event.get():
@@ -36,11 +36,27 @@ while(running):
                 keys[event.key][0]=True
                 keys[event.key][2]=event.unicode
                 keys[event.key][3]=pygame.time.get_ticks()
+            elif(event.key==pygame.K_RIGHT):
+                keys[256][0]=True
+                keys[256][2]=''
+                keys[256][3]=pygame.time.get_ticks()
+            elif(event.key==pygame.K_LEFT):
+                keys[257][0]=True
+                keys[257][2]=''
+                keys[257][3]=pygame.time.get_ticks()
         if event.type == pygame.KEYUP:
             if(event.key<256):
                 keys[event.key][0]=False
                 keys[event.key][1]=0
                 keys[event.key][4]=False
+            elif(event.key==pygame.K_RIGHT):
+                keys[256][0]=False
+                keys[256][1]=0
+                keys[256][4]=False
+            elif(event.key==pygame.K_LEFT):
+                keys[257][0]=False
+                keys[257][1]=0
+                keys[257][4]=False
 
 
     screen.fill((127,127,127))

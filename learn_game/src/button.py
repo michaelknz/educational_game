@@ -45,7 +45,7 @@ class button(object):
         self.is_picture=True
         sheet=pygame.image.load(path)
         r=pygame.Rect(rect)
-        size=(rect[1]-rect[0],rect[3]-rect[2])
+        size=(rect[2]-rect[0],rect[3]-rect[1])
         image = pygame.Surface(size).convert()
         image.blit(sheet, (0, 0), rect)
         image=pygame.transform.scale(image,pic_size)

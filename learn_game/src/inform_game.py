@@ -22,6 +22,7 @@ class inform_game(object):
         self.return_button=button("res/button_blue.png")
         self.return_button.add_button((49,48),(339,95,388,143),'',(255,255,255))
         self.return_button.add_button((49,45),(290,95,340,140),'',(255,255,255))
+        self.return_button.set_picture('res/icons.png',(4*51-5,51+5,5*51-5,2*51+5),(40,40))
 
     def init_levels(self):
         self.levels.append(inf_l_1(self.screen,(150,100)))
