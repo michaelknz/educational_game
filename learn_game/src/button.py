@@ -8,6 +8,7 @@ class button(object):
         self.texts=[]
         self.pos=[]
         self.cur_im_ind=0
+        self.is_picture=False
 
     def image_at(self,image_size,image_pos,colorkey=None):
         rect = pygame.Rect(image_pos)
@@ -22,8 +23,11 @@ class button(object):
 
     def draw_button(self,screen,i,pos):
         screen.blit(self.images[i],(pos[0]-self.images[i].get_width()//2,pos[1]-self.images[i].get_height()//2))
-        t=self.font.render(self.texts[i][0],True,self.texts[i][1])
-        screen.blit(t,(pos[0]-t.get_width()//2,pos[1]-t.get_height()//2))
+        if(not self.is_picture):
+            t=self.font.render(self.texts[i][0],True,self.texts[i][1])
+            screen.blit(t,(pos[0]-t.get_width()//2,pos[1]-t.get_height()//2))
+        else:
+            screen.blit(self.icon,(pos[0]-self.icon.get_width()//2,pos[1]-self.icon.get_height()//2))
         self.pos=pos
         self.cur_im_ind=i
 
@@ -36,3 +40,14 @@ class button(object):
             return True
         else:
             return False
+
+    def set_picture(self,path,rect,pic_size):
+        self.is_picture=True
+        sheet=pygame.image.load(path)
+        r=pygame.Rect(rect)
+        size=(rect[1]-rect[0],rect[3]-rect[2])
+        image = pygame.Surface(size).convert()
+        image.blit(sheet, (0, 0), rect)
+        image=pygame.transform.scale(image,pic_size)
+        image.set_colorkey((0,0,0))
+        self.icon=image

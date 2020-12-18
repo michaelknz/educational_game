@@ -19,6 +19,9 @@ class inform_game(object):
             self.buttons.append(button("res/button_blue.png"))
             self.buttons[i].add_button((49,48),(339,95,388,143),str(i+1),(255,255,255))
             self.buttons[i].add_button((49,45),(290,95,340,140),str(i+1),(255,255,255))
+        self.return_button=button("res/button_blue.png")
+        self.return_button.add_button((49,48),(339,95,388,143),'',(255,255,255))
+        self.return_button.add_button((49,45),(290,95,340,140),'',(255,255,255))
 
     def init_levels(self):
         self.levels.append(inf_l_1(self.screen,(150,100)))
@@ -33,6 +36,11 @@ class inform_game(object):
                 self.buttons[i].draw_button(self.screen,1,(100+i*25,100))
             else:
                 self.buttons[i].draw_button(self.screen,0,(100+i*25,100))
+        if(is_clicked and self.return_button.check_pos_in_button(pos)):
+            self.next_level=-1
+            self.return_button.draw_button(self.screen,1,(self.screen.get_width()-100,self.screen.get_height()-100))
+        else:
+            self.return_button.draw_button(self.screen,0,(self.screen.get_width()-100,self.screen.get_height()-100))
 
     def update(self,is_clicked,pos,keys):
         if(is_clicked==False):
@@ -40,7 +48,11 @@ class inform_game(object):
         if(self.cur_level==0):
             self.draw_bg()
             self.draw_buttons(is_clicked,pos)
-        else:
+        elif(self.next_level!=-1):
             self.levels[self.cur_level-1].update(keys,is_clicked,pos)
+        if(self.next_level==-1):
+            self.next_level=0
+            self.cur_level=0
+            return 0
 
         return 1
