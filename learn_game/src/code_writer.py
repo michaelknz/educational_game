@@ -17,8 +17,12 @@ class code_writer:
         self.scaret_pos_on_screen=[start_pos[0]+self.font.render(' ',True,(0,0,0)).get_width()*6,start_pos[1]]
         self.caret_pos_on_screen=self.scaret_pos_on_screen.copy()
         self.special=set()
-        self.divisors=set([' ','(',')'])
-        self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100)}
+        self.classes=set()
+        self.method=set()
+        self.divisors=set([' ','(',')','.'])
+        self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100),'method':(255,200,150),'class':(150,255,200)}
+        self.is_block=False
+        self.is_in_set=True
 
     def draw_bg(self):
         bg=pygame.Surface((self.size[0],self.size[1]))
@@ -60,7 +64,13 @@ class code_writer:
                     color=self.colors['digits']
                 elif(s in self.special):
                     color=self.colors['special']
+                elif(s in self.classes):
+                    color=self.colors['class']
+                elif(s in self.method):
+                    color=self.colors['method']
                 else:
+                    if(s!=''):
+                        self.is_in_set=False
                     color=self.colors['normal']
                 t=self.font.render(s,True,color)
                 self.screen.blit(t,(x,y))
@@ -73,7 +83,6 @@ class code_writer:
             else:
                 s+=i
         if(s=='EOF'):
-            #self.screen.blit(self.update_caret(),(x-self.font.render(' ',True,(0,0,0)).get_width(),y))
             self.screen.blit(self.update_caret(),(self.caret_pos_on_screen[0],self.caret_pos_on_screen[1]))
         else:
             color=0
@@ -81,24 +90,29 @@ class code_writer:
                 color=self.colors['digits']
             elif(s in self.special):
                 color=self.colors['special']
+            elif(s in self.classes):
+                color=self.colors['class']
+            elif(s in self.method):
+                color=self.colors['method']
             else:
+                if(s!=''):
+                    self.is_in_set=False
                 color=self.colors['normal']
             t=self.font.render(s,True,color)
             self.screen.blit(t,(x,y))
 
     def update_code(self,keys):
+        if(self.is_block):
+            return
         for i in range(len(keys)):
             if(keys[i][0]==True and keys[i][1]<=0):
-                if(i==8 and len(self.code)!=0):
-                    #self.code=self.code[:-1:]
+                if(i==8 and len(self.code)!=0 and self.caret_pos_in_text>0):
                     self.code=self.code[:self.caret_pos_in_text-1:]+self.code[self.caret_pos_in_text::]
                     self.caret_pos_in_text-=1
                 elif(i==13):
-                    #self.code+='\n'
                     self.code=self.code[:self.caret_pos_in_text:]+'\n'+self.code[self.caret_pos_in_text::]
                     self.caret_pos_in_text+=1
                 elif(i==9):
-                    #self.code+='    '
                     self.code=self.code[:self.caret_pos_in_text:]+'    '+self.code[self.caret_pos_in_text::]
                     self.caret_pos_in_text+=4
                 elif(i==256):
@@ -108,7 +122,6 @@ class code_writer:
                     if(self.caret_pos_in_text>0):
                         self.caret_pos_in_text-=1
                 else:
-                    #self.code+=keys[i][2]
                     q=len(self.code)
                     self.code=self.code[:self.caret_pos_in_text:]+keys[i][2]+self.code[self.caret_pos_in_text::]
                     if(q!=len(self.code)):
@@ -132,6 +145,7 @@ class code_writer:
     def draw_text(self,keys,is_finished):
         if(not is_finished):
             self.update_code(keys)
+        self.is_in_set=True
         x=self.start_pos[0]
         y=self.start_pos[1]
         j=1
@@ -147,8 +161,10 @@ class code_writer:
             j+=1
             y+=self.font.render('1',True,(0,0,0)).get_height()*(1.3)
 
-    def set_lighting(self,s=set()):
+    def set_lighting(self,s=set(),c=set(),m=set()):
         self.special=s.copy()
+        self.classes=c.copy()
+        self.method=m.copy()
         
     def draw_ed(self,keys,is_finished):
         self.draw_bg()
@@ -167,3 +183,9 @@ class code_writer:
         if(y==0):
             xi=self.font.render(self.code[i+1:x+1:],True,(0,0,0)).get_width()
         return [xi,y]
+
+    def block(self):
+        self.is_block=True
+
+    def unblock(self):
+        self.is_block=False

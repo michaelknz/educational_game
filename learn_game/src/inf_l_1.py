@@ -17,9 +17,17 @@ class inf_l_1(inf_l_base):
         self.level_num=1
 
     def syntax_lighting(self):
-        s=set(["for","in","range"])
-        self.editor.set_lighting(s)
+        s=set()
+        c=set(['boy'])
+        m=set(['right','left','down','up'])
+        self.editor.set_lighting(s,c,m)
 
     def set_hero(self):
         self.hero=player(self.screen,'res/hero.png',self.start_pos.copy(),self.tile_size)
+        self.hero.set_poses(self.start_pos,self.fin_pos)
         self.editor.code='boy.right(4)\nboy.down(1)\nboy.right(3)'
+
+    def to_start(self):
+        self.is_finished=False
+        self.is_error=False
+        self.hero.to_start()

@@ -19,6 +19,7 @@ class inf_l_base:
         self.level_num=0
         self.build_map()
         self.is_finished=False
+        self.is_error=False
         self.hero=0
         self.editor=code_writer(self.screen,(screen.get_width()*3//4,0))
         self.set_hero()
@@ -50,13 +51,22 @@ class inf_l_base:
 
     def update(self,keys,is_clicked,pos):
         self.draw_map()
-        self.is_finished=self.hero.update(self.start_pos,self.fin_pos,self.is_finished)
+        self.is_finished=self.hero.update(self.is_finished)
         self.editor.draw_ed(keys,self.is_finished)
+        if(self.is_error):
+            self.is_error = self.message.update_error(is_clicked,pos)
+            self.editor.block()
+            self.edb.block()
+            self.edb.update(is_clicked,pos)
+            return self.level_num
+        else:
+            self.editor.unblock()
+            self.edb.unblock()
         if(not self.is_finished):
-            self.hero = self.edb.update(is_clicked,pos)
+            self.hero,self.is_error = self.edb.update(is_clicked,pos,self.editor.is_in_set)
         else:
             self.edb.update(is_clicked,pos)
-            return self.message.update(is_clicked,pos,self.level_num)
+            return self.message.update_cong(is_clicked,pos,self.level_num)
         return self.level_num
 
     def build_map(self):
@@ -66,4 +76,7 @@ class inf_l_base:
         pass
 
     def set_hero(self):
+        pass
+
+    def to_start(self):
         pass

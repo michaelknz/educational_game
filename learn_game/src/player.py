@@ -30,6 +30,9 @@ class player:
         for i in range(1,8):
             self.move_side.append(self.image_at((i*96,128*4,(i+1)*96,128*5),(96,128)))
 
+    def Clear_movings(self):
+        self.movings.clear()
+
     def right(self,x):
         if(self.is_exec):
             for i in range(x):
@@ -56,7 +59,15 @@ class player:
             self.animIndex-=7.0
         self.surf=self.move_side[int(self.animIndex)]
 
-    def update(self,start_pos,fin_pos,is_finished):
+    def to_start(self):
+        self.pos_in_quads=self.start_pos.copy()
+        self.pos=[self.start_pos[0]*self.step[0],self.start_pos[1]*self.step[1]]
+
+    def set_poses(self,start,fin):
+        self.start_pos=start.copy()
+        self.fin_pos=fin.copy()
+
+    def update(self,is_finished):
         if(is_finished):
             self.screen.blit(self.surf,(self.pos[0],self.pos[1]-self.surf.get_height()//2))
             return 1
@@ -75,11 +86,11 @@ class player:
                 self.animIndex=0
                 self.surf=self.still
                 if(len(self.movings)==0):
-                    if(self.pos_in_quads[0]==fin_pos[0] and self.pos_in_quads[1]==fin_pos[1]):
+                    if(self.pos_in_quads[0]==self.fin_pos[0] and self.pos_in_quads[1]==self.fin_pos[1]):
                         return 1
                     else:
-                        self.pos_in_quads=start_pos.copy()
-                        self.pos=[start_pos[0]*self.step[0],start_pos[1]*self.step[1]]
+                        self.pos_in_quads=self.start_pos.copy()
+                        self.pos=[self.start_pos[0]*self.step[0],self.start_pos[1]*self.step[1]]
                     self.is_exec=True
                     return 0 
             if(self.cur_del==0):

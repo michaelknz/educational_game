@@ -24,6 +24,10 @@ class inform_game(object):
         self.return_button.add_button((49,45),(290,95,340,140),'',(255,255,255))
         self.return_button.set_picture('res/icons.png',(4*51-5,51+5,5*51-5,2*51+5),(40,40))
 
+    def levels_to_start(self):
+        for i in range(len(self.levels)):
+            self.levels[i].to_start()
+
     def init_levels(self):
         self.levels.append(inf_l_1(self.screen,(150,100)))
 
@@ -49,6 +53,7 @@ class inform_game(object):
         if(self.cur_level==0):
             self.draw_bg()
             self.draw_buttons(is_clicked,pos)
+            self.levels_to_start()
         elif(self.next_level!=-1):
             self.next_level = self.levels[self.cur_level-1].update(keys,is_clicked,pos)
         if(self.next_level==-1):

@@ -13,6 +13,7 @@ class editor_bar:
         self.run.add_button((49,45),(290,95,340,140),'run',(255,255,255))
         self.run.draw_button(screen,0,(start_pos[0]+(screen.get_width()-start_pos[0])//2,start_pos[1]+(screen.get_height()-start_pos[1])//2))
         self.bg_color=(25,25,75)
+        self.is_block=False
 
     def draw_bg(self):
         bg=pygame.Surface((self.size[0],self.size[1]))
@@ -25,16 +26,31 @@ class editor_bar:
         else:
             self.run.draw_button(self.screen,0,self.run.pos)
 
-    def execute(self,is_clicked,pos):
-        if(is_clicked and self.run.check_pos_in_button(pos) and self.hero.is_exec):
+    def execute(self,is_clicked,pos,is_norm):
+        bout=False
+        if(is_clicked and self.run.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
             boy=self.hero
-            exec(self.editor.code)
+            if(not is_norm):
+                boy.Clear_movings()
+                bout=True
+                self.hero=boy
+                return (self.hero,bout)
+            try:
+                exec(self.editor.code)
+            except:
+                boy.Clear_movings()
+                bout=True
             boy.is_exec=False
             self.hero=boy
-        return self.hero
+        return (self.hero,bout)
 
-    def update(self,is_clicked,pos):
+    def block(self):
+        self.is_block=True
+
+    def unblock(self):
+        self.is_block=False
+
+    def update(self,is_clicked,pos,is_norm=True):
         self.draw_bg()
         self.draw_button(is_clicked,pos)
-        self.execute(is_clicked,pos)
-        return self.hero
+        return self.execute(is_clicked,pos,is_norm)
