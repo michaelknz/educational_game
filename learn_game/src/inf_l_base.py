@@ -20,12 +20,14 @@ class inf_l_base:
         self.build_map()
         self.is_finished=False
         self.is_error=False
+        self.is_start=True
         self.hero=0
         self.editor=code_writer(self.screen,(screen.get_width()*3//4,0))
         self.set_hero()
         self.edb=editor_bar(screen,self.hero,self.editor,(screen.get_width()*3//4,screen.get_height()*7//8))
         self.message=message_box(screen)
         self.syntax_lighting()
+        self.set_start()
 
     def image_at(self,i,j,colorkey=None):
         rect = pygame.Rect((i*self.tile_tex_size[0],j*self.tile_tex_size[1],(i+1)*self.tile_tex_size[0],(j+1)*self.tile_tex_size[1]))
@@ -62,8 +64,23 @@ class inf_l_base:
         else:
             self.editor.unblock()
             self.edb.unblock()
+        if(self.is_start):
+            self.is_start=self.message.update_start(is_clicked,pos)
+            self.editor.block()
+            self.edb.block()
+            self.edb.update(is_clicked,pos)
+            return self.level_num
+        else:
+            self.message.cur_start_p=0
+            self.editor.unblock()
+            self.edb.unblock()
         if(not self.is_finished):
-            self.hero,self.is_error = self.edb.update(is_clicked,pos,self.editor.is_in_set)
+            flag=0
+            self.hero,self.is_error,flag = self.edb.update(is_clicked,pos,self.editor.is_in_set)
+            if(flag==1):
+                return 0
+            elif(flag==2):
+                self.is_start=True
         else:
             self.edb.update(is_clicked,pos)
             return self.message.update_cong(is_clicked,pos,self.level_num)
@@ -79,4 +96,7 @@ class inf_l_base:
         pass
 
     def to_start(self):
+        pass
+
+    def set_start(self):
         pass

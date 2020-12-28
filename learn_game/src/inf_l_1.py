@@ -31,3 +31,15 @@ class inf_l_1(inf_l_base):
         self.is_finished=False
         self.is_error=False
         self.hero.to_start()
+
+    def set_start(self):
+        out=[]
+        text='Welcome to our game!\nHere you will learn\nprogramming basics.'
+        out.append(text)
+        text='First task will be very simple.\nYou need to move boy\nto the end of the road.\nYou can use four commands:'
+        out.append(text)
+        text='boy.right(N)-move right on N cells\nboy.left(N)-move left on N cells\nboy.up(N)-move up on N cells\nboy.down(N)-move down on\nN cells'
+        out.append(text)
+        text='You need to write sequence\nof commands to the editor on the\nleft side of the screen\nand then press "run"'
+        out.append(text)
+        self.message.set_start_text(out)

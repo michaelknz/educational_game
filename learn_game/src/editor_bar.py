@@ -12,6 +12,16 @@ class editor_bar:
         self.run.add_button((49,48),(339,95,388,143),'run',(255,255,255))
         self.run.add_button((49,45),(290,95,340,140),'run',(255,255,255))
         self.run.draw_button(screen,0,(start_pos[0]+(screen.get_width()-start_pos[0])//2,start_pos[1]+(screen.get_height()-start_pos[1])//2))
+        self.ret=button("res/button_blue.png")
+        self.ret.add_button((49,48),(339,95,388,143),'',(255,255,255))
+        self.ret.add_button((49,45),(290,95,340,140),'',(255,255,255))
+        self.ret.set_picture('res/icons.png',(4*51-5,51+5,5*51-5,2*51+5),(40,40))
+        self.ret.draw_button(screen,0,(start_pos[0]+(screen.get_width()-start_pos[0])//2+self.run.images[0].get_width()+50,start_pos[1]+(screen.get_height()-start_pos[1])//2))
+        self.qw=button("res/button_blue.png")
+        self.qw.add_button((49,48),(339,95,388,143),'',(255,255,255))
+        self.qw.add_button((49,45),(290,95,340,140),'',(255,255,255))
+        self.qw.set_picture('res/icons.png',(204,110,244,150),(40,40))
+        self.qw.draw_button(screen,0,(start_pos[0]+(screen.get_width()-start_pos[0])//2-self.run.images[0].get_width()-50,start_pos[1]+(screen.get_height()-start_pos[1])//2))
         self.bg_color=(25,25,75)
         self.is_block=False
 
@@ -21,6 +31,14 @@ class editor_bar:
         self.screen.blit(bg,self.start_pos)
 
     def draw_button(self,is_clicked,pos):
+        if(is_clicked and self.qw.check_pos_in_button(pos)):
+            self.qw.draw_button(self.screen,1,self.qw.pos)
+        else:
+            self.qw.draw_button(self.screen,0,self.qw.pos)
+        if(is_clicked and self.ret.check_pos_in_button(pos)):
+            self.ret.draw_button(self.screen,1,self.ret.pos)
+        else:
+            self.ret.draw_button(self.screen,0,self.ret.pos)
         if(is_clicked and self.run.check_pos_in_button(pos)):
             self.run.draw_button(self.screen,1,self.run.pos)
         else:
@@ -28,6 +46,11 @@ class editor_bar:
 
     def execute(self,is_clicked,pos,is_norm):
         bout=False
+        flag=0
+        if(is_clicked and self.ret.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
+            flag=1
+        if(is_clicked and self.qw.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
+            flag=2
         if(is_clicked and self.run.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
             boy=self.hero
             if(not is_norm):
@@ -42,7 +65,7 @@ class editor_bar:
                 bout=True
             boy.is_exec=False
             self.hero=boy
-        return (self.hero,bout)
+        return (self.hero,bout,flag)
 
     def block(self):
         self.is_block=True

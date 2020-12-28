@@ -52,3 +52,6 @@ class button(object):
         image=pygame.transform.scale(image,pic_size)
         image.set_colorkey((0,0,0))
         self.icon=image
+
+    def scale_tex(self,ind,size):
+        self.images[ind]=pygame.transform.scale(self.images[ind],(size[0],size[1]))
