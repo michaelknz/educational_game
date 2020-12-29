@@ -53,7 +53,7 @@ class inf_l_base:
 
     def update(self,keys,is_clicked,pos):
         self.draw_map()
-        self.is_finished=self.hero.update(self.is_finished)
+        self.is_finished=self.hero.update(self.is_finished,self.map,self.map_size)
         self.editor.draw_ed(keys,self.is_finished)
         if(self.is_error):
             self.is_error = self.message.update_error(is_clicked,pos)

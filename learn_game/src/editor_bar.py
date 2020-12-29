@@ -6,6 +6,7 @@ class editor_bar:
         self.screen=screen
         self.hero=hero
         self.start_pos=start_pos
+        self.class_name=''
         self.editor=editor
         self.size=(abs(screen.get_width()-start_pos[0]),abs(screen.get_height()-start_pos[1]))
         self.run=button("res/button_blue.png")
@@ -52,19 +53,19 @@ class editor_bar:
         if(is_clicked and self.qw.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
             flag=2
         if(is_clicked and self.run.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
-            boy=self.hero
+            locals().update({self.class_name:self.hero})
             if(not is_norm):
-                boy.Clear_movings()
+                locals()[self.class_name].Clear_movings()
                 bout=True
-                self.hero=boy
-                return (self.hero,bout)
+                self.hero=locals()[self.class_name]
+                return (self.hero,bout,flag)
             try:
                 exec(self.editor.code)
             except:
-                boy.Clear_movings()
+                locals()[self.class_name].Clear_movings()
                 bout=True
-            boy.is_exec=False
-            self.hero=boy
+            locals()[self.class_name].is_exec=False
+            self.hero=locals()[self.class_name]
         return (self.hero,bout,flag)
 
     def block(self):
@@ -77,3 +78,6 @@ class editor_bar:
         self.draw_bg()
         self.draw_button(is_clicked,pos)
         return self.execute(is_clicked,pos,is_norm)
+
+    def set_Cname(self,text):
+        self.class_name=text

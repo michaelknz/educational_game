@@ -162,6 +162,8 @@ class message_box:
         self.start_text=text.copy()
 
     def render_start_text(self):
+        if(len(self.start_text)==0):
+            return
         s=''
         y=self.screen.get_height()//2-self.surf.get_height()//2-60
         delt=-1

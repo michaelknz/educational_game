@@ -21,6 +21,7 @@ class inf_l_1(inf_l_base):
         c=set(['boy'])
         m=set(['right','left','down','up'])
         self.editor.set_lighting(s,c,m)
+        self.edb.set_Cname(list(c)[0])
 
     def set_hero(self):
         self.hero=player(self.screen,'res/hero.png',self.start_pos.copy(),self.tile_size)
