@@ -55,3 +55,8 @@ class button(object):
 
     def scale_tex(self,ind,size):
         self.images[ind]=pygame.transform.scale(self.images[ind],(size[0],size[1]))
+
+    def set_text(self,text,text_color=(50,50,50)):
+        self.texts.clear()
+        self.texts.append((text,text_color))
+        self.texts.append((text,text_color))

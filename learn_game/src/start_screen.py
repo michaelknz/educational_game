@@ -8,10 +8,13 @@ class start_screen(pygame.sprite.Sprite):
         self.bg=pygame.image.load(image_path)
         self.bg=pygame.transform.scale(self.bg,(self.screen.get_width(),self.screen.get_height()))
         self.inf_but=button("res/buttons.png")
-        self.inf_but.add_button((190,49),(190,45,380,95),"Информатика")
-        self.inf_but.add_button((190,45),(0,50,190,95),"Информатика")
+        self.inf_but.add_button((190,49),(190,45,380,95),"Informatics")
+        self.inf_but.add_button((190,45),(0,50,190,95),"Informatics")
+        self.math_but=button("res/buttons.png")
+        self.math_but.add_button((190,49),(190,45,380,95),"Mathematics")
+        self.math_but.add_button((190,45),(0,50,190,95),"Mathematics")
         self.font=pygame.font.SysFont('Corbel',100)
-        self.title="Обучалка"
+        self.title="Learning"
 
     def draw_bg(self):
         self.screen.blit(self.bg,(0,0))
@@ -28,5 +31,10 @@ class start_screen(pygame.sprite.Sprite):
             return 1
         else:
             self.inf_but.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2-75))
-            return 0
+        if(is_clicked and self.math_but.check_pos_in_button(pos)):
+            self.math_but.draw_button(self.screen,1,(self.screen.get_width()//2,self.screen.get_height()//2))
+            return 2
+        else:
+            self.math_but.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2))
+        return 0
 

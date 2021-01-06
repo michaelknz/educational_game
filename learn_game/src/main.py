@@ -1,6 +1,7 @@
 import pygame
 from start_screen import start_screen
 from inform_game import inform_game
+from math_game import math_game
 
 SCREEN_WIDTH=1600
 SCREEN_HEIGHT=800
@@ -11,7 +12,7 @@ screen=pygame.display.set_mode([SCREEN_WIDTH,SCREEN_HEIGHT])
 clock = pygame.time.Clock()
 start_scr=start_screen(screen,"res/start_bg.jpg")
 inform_scr=inform_game(screen,"res/start_bg.jpg")
-
+math_scr=math_game(screen,"res/math_bg.jpg")
 running=True
 is_clicked=False
 mouse_pos=[-1,-1]
@@ -64,6 +65,8 @@ while(running):
         next_mode = start_scr.update(is_clicked,mouse_pos)
     elif(cur_mode==1):
         next_mode = inform_scr.update(is_clicked,mouse_pos,keys)
+    elif(cur_mode==2):
+        next_mode = math_scr.update(is_clicked,mouse_pos)
     pygame.display.flip()
     clock.tick(60)
 
