@@ -53,7 +53,7 @@ class inf_l_base:
 
     def update(self,keys,is_clicked,pos):
         self.draw_map()
-        self.is_finished=self.hero.update(self.is_finished,self.map,self.map_size)
+        self.is_finished=self.hero.update(self.is_finished)
         self.editor.draw_ed(keys,self.is_finished)
         if(self.is_error):
             self.is_error = self.message.update_error(is_clicked,pos)
@@ -83,7 +83,10 @@ class inf_l_base:
                 self.is_start=True
         else:
             self.edb.update(is_clicked,pos)
-            return self.message.update_cong(is_clicked,pos,self.level_num)
+            out=self.message.update_cong(is_clicked,pos,self.level_num)
+            if(out==0):
+                self.editor.clean_editor()
+            return out
         return self.level_num
 
     def build_map(self):

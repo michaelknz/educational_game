@@ -45,7 +45,7 @@ class editor_bar:
         else:
             self.run.draw_button(self.screen,0,self.run.pos)
 
-    def execute(self,is_clicked,pos,is_norm):
+    def execute(self,is_clicked,pos, is_norm):
         bout=False
         flag=0
         if(is_clicked and self.ret.check_pos_in_button(pos) and self.hero.is_exec and (not self.is_block)):
@@ -59,11 +59,14 @@ class editor_bar:
                 bout=True
                 self.hero=locals()[self.class_name]
                 return (self.hero,bout,flag)
-            try:
-                exec(self.editor.code)
-            except:
-                locals()[self.class_name].Clear_movings()
-                bout=True
+            for i in range(self.hero.num):
+                if(self.hero.num>1):
+                    self.hero.cur_num=i
+                try:
+                    exec(self.editor.code)
+                except:
+                    locals()[self.class_name].Clear_movings()
+                    bout=True
             locals()[self.class_name].is_exec=False
             self.hero=locals()[self.class_name]
         return (self.hero,bout,flag)

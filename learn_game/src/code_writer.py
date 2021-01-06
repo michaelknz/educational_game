@@ -19,7 +19,7 @@ class code_writer:
         self.special=set()
         self.classes=set()
         self.method=set()
-        self.divisors=set([' ','(',')','.'])
+        self.divisors=set([' ','(',')','.',':'])
         self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100),'method':(255,200,150),'class':(150,255,200)}
         self.is_block=False
         self.is_in_set=True
@@ -28,6 +28,11 @@ class code_writer:
         bg=pygame.Surface((self.size[0],self.size[1]))
         bg.fill(self.bg_color)
         self.screen.blit(bg,self.start_pos)
+
+    def clean_editor(self):
+        self.code=''
+        self.caret_pos_in_text=0
+        self.caret_pos_on_screen=self.scaret_pos_on_screen.copy()
 
     def set_alpha(self,sur,cur):
         w, h = sur.get_size()

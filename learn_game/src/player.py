@@ -16,8 +16,11 @@ class player:
         self.cur_del=0
         self.still=self.image_at((0,0,96,128),(96,128))
         self.surf=self.still
+        self.map=0
+        self.map_size=0
         self.is_exec=True
         self.is_flip=False
+        self.num=1
 
     def image_at(self, rectangle, size):
         self.sheet = pygame.image.load(self.path).convert()
@@ -26,6 +29,10 @@ class player:
         image.blit(self.sheet, (0, 0), rect)
         image.set_colorkey((0,0,0))
         return image
+
+    def set_map(self,map,map_size):
+        self.map=map
+        self.map_size=map_size
 
     def get_wimages(self):
         for i in range(1,8):
@@ -68,7 +75,7 @@ class player:
         self.start_pos=start.copy()
         self.fin_pos=fin.copy()
 
-    def update(self,is_finished,map,tile_col):
+    def update(self,is_finished):
         if(is_finished):
             self.screen.blit(self.surf,(self.pos[0],self.pos[1]-self.surf.get_height()//2))
             return 1
@@ -84,7 +91,7 @@ class player:
                 elif(self.movings[0][0]== 'u'):
                     self.pos_in_quads[1]-=1
                 self.movings.pop(0)
-                if(self.check(map,tile_col)):
+                if(self.check()):
                     self.Clear_movings()
                 self.animIndex=0
                 self.surf=self.still
@@ -120,8 +127,8 @@ class player:
         self.screen.blit(pygame.transform.flip(self.surf,self.is_flip,False),(self.pos[0],self.pos[1]-self.surf.get_height()//2))
         return 0
 
-    def check(self,map,map_size):
-        if(map[self.pos_in_quads[1]*map_size[0]+self.pos_in_quads[0]]=='G' or self.pos_in_quads[1]<0 or self.pos_in_quads[1]>=map_size[1] or self.pos_in_quads[0]<0 or self.pos_in_quads[0]>=map_size[0]):
+    def check(self):
+        if(self.map[self.pos_in_quads[1]*self.map_size[0]+self.pos_in_quads[0]]=='G' or self.pos_in_quads[1]<0 or self.pos_in_quads[1]>=self.map_size[1] or self.pos_in_quads[0]<0 or self.pos_in_quads[0]>=self.map_size[0]):
             return True
         else:
             return False

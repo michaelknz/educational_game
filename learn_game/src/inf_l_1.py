@@ -11,7 +11,7 @@ class inf_l_1(inf_l_base):
                   'G','G','G','G','G','G','G','G',
                   'G','G','G','G','G','G','G','G',
                   'G','G','G','G','G','G','G','G',
-                  'G','G','G','G','G','G','G','G',]
+                  'G','G','G','G','G','G','G','G']
         self.start_pos=[0,1]
         self.fin_pos=[7,2]
         self.level_num=1
@@ -26,6 +26,7 @@ class inf_l_1(inf_l_base):
     def set_hero(self):
         self.hero=player(self.screen,'res/hero.png',self.start_pos.copy(),self.tile_size)
         self.hero.set_poses(self.start_pos,self.fin_pos)
+        self.hero.set_map(self.map,self.map_size)
         self.editor.code='boy.right(4)\nboy.down(1)\nboy.right(3)'
 
     def to_start(self):
