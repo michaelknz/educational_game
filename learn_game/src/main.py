@@ -67,6 +67,7 @@ while(running):
         next_mode = inform_scr.update(is_clicked,mouse_pos,keys)
     elif(cur_mode==2):
         next_mode = math_scr.update(is_clicked,mouse_pos)
+        cur_mode=next_mode
     pygame.display.flip()
     clock.tick(60)
 

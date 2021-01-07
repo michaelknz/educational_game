@@ -23,6 +23,9 @@ class message_box:
         self.right_arrow.add_button((16,16),(450,432,466,448),'')
         self.left_arrow.scale_tex(0,(40,40))
         self.right_arrow.scale_tex(0,(40,40))
+        self.exit=button("res/buttons.png")
+        self.exit.add_button((190,49),(190,45,380,95),"Exit")
+        self.exit.add_button((190,45),(0,50,190,95),"Exit")
         self.font=pygame.font.SysFont('Corbel',100)
         self.start_text=[]
         sheet=pygame.image.load(self.path).convert()
@@ -184,3 +187,17 @@ class message_box:
         self.screen.blit(t,(x,y))
         s=''
         y+=delt
+
+    def draw_fin(self,is_first,is_clicked,pos):
+        self.load_bg((30,30))
+        self.screen.blit(self.surf,(self.screen.get_width()//2,self.screen.get_height()//2))
+        self.load_bg((20,20))
+        if(is_first):
+            self.exit.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2+20))
+            return 2
+        if(is_clicked and self.exit.check_pos_in_button(pos)):
+            self.exit.draw_button(self.screen,1,self.exit.pos)
+            return 0
+        else:
+            self.exit.draw_button(self.screen,0,self.exit.pos)
+            return 2
