@@ -148,7 +148,7 @@ class math_game:
             self.cur_diff+=1
             self.cur_time+=5
         if(is_right and not self.is_over):
-            self.was=True
+            self.del_time=self.cur_time
             self.cur_score+=1
             self.cur_exp=self.generate_exp(self.cur_diff)
             ans=['r','1','2','3']
@@ -241,9 +241,9 @@ class math_game:
         self.but=self.draw_buttons(is_clicked,pos)
         if(self.is_over):
             if(self.out!=0):
-                self.out=self.fin_scr.draw_fin(self.is_f_f,is_clicked,pos)
+                self.out=self.fin_scr.draw_fin(self.is_f_f,is_clicked,pos,self.cur_score)
             else:
-                self.fin_scr.draw_fin(self.is_f_f,is_clicked,pos)
+                self.fin_scr.draw_fin(self.is_f_f,is_clicked,pos,self.cur_score)
             self.is_f_f=False
             if(self.out==0 and not is_clicked):
                 self.is_first=True

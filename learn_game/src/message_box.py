@@ -9,8 +9,8 @@ class message_box:
         self.path='res/UI_1.png'
         self.load_bg((20,20))
         self.congr_but=button("res/buttons.png")
-        self.congr_but.add_button((190,49),(190,45,380,95),"Уровень пройден!")
-        self.congr_but.add_button((190,45),(0,50,190,95),"Уровень пройден!")
+        self.congr_but.add_button((190,49),(190,45,380,95),"Task solved!")
+        self.congr_but.add_button((190,45),(0,50,190,95),"Task solved!")
         self.ok_but=button("res/buttons.png")
         self.ok_but.add_button((190,49),(190,45,380,95),"OK")
         self.ok_but.add_button((190,45),(0,50,190,95),"OK")
@@ -188,12 +188,13 @@ class message_box:
         s=''
         y+=delt
 
-    def draw_fin(self,is_first,is_clicked,pos):
-        self.load_bg((30,30))
-        self.screen.blit(self.surf,(self.screen.get_width()//2,self.screen.get_height()//2))
-        self.load_bg((20,20))
+    def draw_fin(self,is_first,is_clicked,pos,score):
+        self.draw_fin_bg((30,30))
+        f=pygame.font.SysFont('Corbel',80)
+        t=f.render("Your score: "+str(score),True,(50,50,50))
+        self.screen.blit(t,(self.screen.get_width()//2-t.get_width()//2,self.screen.get_height()//2-t.get_height()//2-150))
         if(is_first):
-            self.exit.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2+20))
+            self.exit.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2+190))
             return 2
         if(is_clicked and self.exit.check_pos_in_button(pos)):
             self.exit.draw_button(self.screen,1,self.exit.pos)
@@ -201,3 +202,49 @@ class message_box:
         else:
             self.exit.draw_button(self.screen,0,self.exit.pos)
             return 2
+
+    def draw_fin_bg(self,size1):
+        size=(16,16)
+        surf=pygame.Surface((size1[0]*size[0],size1[1]*size[1])).convert()
+        surf.set_colorkey((255,255,255))
+        sheet=pygame.image.load(self.path).convert()
+        mid=pygame.Surface(size).convert()
+        ri=pygame.Surface(size).convert()
+        le=pygame.Surface(size).convert()
+        up=pygame.Surface(size).convert()
+        down=pygame.Surface(size).convert()
+        luc=pygame.Surface(size).convert()
+        ruc=pygame.Surface(size).convert()
+        rdc=pygame.Surface(size).convert()
+        ldc=pygame.Surface(size).convert()
+        ldc.set_colorkey((0,0,0))
+        mid.blit(sheet,(0,0),(180,252,196,268))
+        ri.blit(sheet,(0,0),(198,252,214,268))
+        le.blit(sheet,(0,0),(162,252,178,268))
+        up.blit(sheet,(0,0),(180,234,196,250))
+        down.blit(sheet,(0,0),(180,270,196,286))
+        luc.blit(sheet,(0,0),(162,234,178,250))
+        ruc.blit(sheet,(0,0),(198,234,214,250))
+        rdc.blit(sheet,(0,0),(198,270,214,286))
+        ldc.blit(sheet,(0,0),(162,270,178,286))
+        for y in range(size1[1]):
+            for x in range(size1[0]):
+                if(x==0 and y==0):
+                    surf.blit(luc,(0,0))
+                elif(x==size1[0]-1 and y==size1[1]-1):
+                    surf.blit(rdc,(x*size[0],y*size[1]))
+                elif(x==0 and y==size1[1]-1):
+                    surf.blit(ldc,(x*size[0],y*size[1]))
+                elif(x==size1[0]-1 and y==0):
+                    surf.blit(ruc,(x*size[0],y*size[1]))
+                elif(x==0):
+                    surf.blit(le,(x*size[0],y*size[1]))
+                elif(y==0):
+                    surf.blit(up,(x*size[0],y*size[1]))
+                elif(x==size1[0]-1):
+                    surf.blit(ri,(x*size[0],y*size[1]))
+                elif(y==size1[1]-1):
+                    surf.blit(down,(x*size[0],y*size[1]))
+                else:
+                    surf.blit(mid,(x*size[0],y*size[1]))
+        self.screen.blit(surf,(self.screen.get_width()//2-surf.get_width()//2,self.screen.get_height()//2-surf.get_height()//2))
