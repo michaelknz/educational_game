@@ -3,6 +3,7 @@ from button import button
 from inf_l_1 import inf_l_1
 from inf_l_2 import inf_l_2
 from inf_l_3 import inf_l_3
+from inf_l_4 import inf_l_4
 
 class inform_game(object):
     def __init__(self,screen,image_path):
@@ -17,7 +18,7 @@ class inform_game(object):
         self.next_level=0
 
     def init_buttons(self):
-        for i in range(3):
+        for i in range(4):
             self.buttons.append(button("res/button_blue.png"))
             self.buttons[i].add_button((49,48),(339,95,388,143),str(i+1),(255,255,255))
             self.buttons[i].add_button((49,45),(290,95,340,140),str(i+1),(255,255,255))
@@ -34,6 +35,7 @@ class inform_game(object):
         self.levels.append(inf_l_1(self.screen,(150,100)))
         self.levels.append(inf_l_2(self.screen,(150,100)))
         self.levels.append(inf_l_3(self.screen,(150,100)))
+        self.levels.append(inf_l_4(self.screen,(150,100)))
 
     def draw_bg(self):
         self.screen.blit(self.bg,(0,0))

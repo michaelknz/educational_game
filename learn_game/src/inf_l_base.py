@@ -1,6 +1,5 @@
 import pygame
 from code_writer import code_writer
-from player import player
 from editor_bar import editor_bar
 from message_box import message_box
 
@@ -42,7 +41,7 @@ class inf_l_base:
 
     def dict_init(self):
         self.dict={'G':(0,2),'H':(0,1),'V':(0,0),'DL':(8,3),'DR':(9,3),'DU':(8,2),'DD':(9,2),
-                   'R-D':(5,0),'U-R':(5,1),'L-U':(6,1),'D-L':(6,0)}
+                   'R-D':(5,0),'U-R':(5,1),'L-U':(6,1),'D-L':(6,0),'X':(9,0)}
 
     def draw_map(self):
         for i in range(self.map_size[1]):

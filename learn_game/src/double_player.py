@@ -10,6 +10,8 @@ class double_player:
         self.cur_num=0
         self.map=0
         self.map_size=0
+        self.a=0
+        self.b=0
 
     def set_poses(self,start_poses,fin_poses):
         self.Player1.set_poses(start_poses[0],fin_poses[0])
@@ -184,21 +186,27 @@ class double_player:
     def update(self,is_finished):
         self.Player1.is_exec=self.is_exec
         self.Player2.is_exec=self.is_exec
-        a=self.Player1.update(is_finished)
-        b=self.Player2.update(is_finished)
-        if(len(self.Player1.movings)==0 and a==0):
+        if(self.a==0):
+            self.a=self.Player1.update(is_finished)
+        else:
+            self.Player1.update(is_finished)
+        if(self.b==0):
+            self.b=self.Player2.update(is_finished)
+        else:
+            self.Player2.update(is_finished)
+        if(len(self.Player1.movings)==0 and len(self.Player2.movings)==0 and (self.a==0 or self.b==0)):
             self.Player2.Clear_movings()
             self.Player2.to_start()
             self.Player2.animIndex=0
             self.Player2.surf=self.Player2.still
-            self.is_exec=True
-        if(len(self.Player2.movings)==0 and b==0):
             self.Player1.Clear_movings()
             self.Player1.to_start()
             self.Player1.animIndex=0
             self.Player1.surf=self.Player1.still
             self.is_exec=True
-        if(a==1 and b==1):
+            self.a=0
+            self.b=0
+        if(self.a==1 and self.b==1):
             return 1
         else:
             return 0
