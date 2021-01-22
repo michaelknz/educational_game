@@ -1,10 +1,10 @@
 import random, pygame, sys
 from pygame.locals import *
 
-BOARDWIDTH = 6
-BOARDHEIGHT = 6
+BOARDWIDTH = 6  # количество столбцов в игре
+BOARDHEIGHT = 6  # количество строк в игре
 
-
+# характеристики окна
 FPS = 60
 WIDTH = 640
 HEIGHT = 480
@@ -14,13 +14,13 @@ clock = pygame.time.Clock()
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 
 SPEEDDEMONSTRATION = 1
-BOXSIZE = 40
-GAPSIZE = 10
+BOXSIZE = 40  # размер карточек
+GAPSIZE = 10  # отступы между карточками
 
 XMARGIN = int((WIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
 YMARGIN = int((HEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
 
-
+# радуга палитра
 RED = (255, 0, 0)
 ORANGE = (255, 128, 0)
 YELLOW = (255, 255, 0)
@@ -32,20 +32,20 @@ GRAY = (100, 100, 100)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-
+# возможные фигуры
 CIRCLE = 'circle'
 SQUARE = 'square'
 DIAMOND = 'diamond'
 LINES = 'lines'
 OVAL = 'oval'
 
-
+# цвета и формы
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 ALLSHAPES = (CIRCLE, SQUARE, DIAMOND, LINES, OVAL)
 
 
 def getRandomizedBoard():
-
+    # создание случайного набора возможных комбинаций форм и цветов
 
     icons = []
     for color in ALLCOLORS:
@@ -53,13 +53,14 @@ def getRandomizedBoard():
             icons.append((shape, color))
     random.shuffle(icons)
 
-
+    # создание нужного количества пар и перемешивание их
 
     numIconsUsed = int(BOARDWIDTH * BOARDHEIGHT / 2)
     icons = icons[:numIconsUsed] * 2
     random.shuffle(icons)
 
-
+    # создание доски
+    # при этом список иконок сокращаем
 
     board = []
     for x in range(BOARDWIDTH):
@@ -73,7 +74,7 @@ def getRandomizedBoard():
 
 
 def generateRevealedBoxesData(val):
-
+    # cоздание списка еще скрытых карточек
     revealedBoxes = []
     for i in range(BOARDWIDTH):
         revealedBoxes.append([val] * BOARDHEIGHT)
@@ -81,7 +82,7 @@ def generateRevealedBoxesData(val):
 
 
 def boxPos(boxx, boxy):
-
+    # преобразование координат доски в пиксельные координаты
 
     bX = boxx * (BOXSIZE + GAPSIZE) + XMARGIN
     bY = boxy * (BOXSIZE + GAPSIZE) + YMARGIN
@@ -90,7 +91,7 @@ def boxPos(boxx, boxy):
 
 
 def getBoxAtPixel(x, y):
-
+    # проверка наличия карточки на месте крысы
 
     for boxx in range(BOARDWIDTH):
         for boxy in range(BOARDHEIGHT):
@@ -102,7 +103,7 @@ def getBoxAtPixel(x, y):
 
 
 def drawIcon(shape, color, boxx, boxy):
-
+    # отрисовываем фигурки
 
     if shape == CIRCLE:
         pygame.draw.circle(display, color,
@@ -134,13 +135,15 @@ def drawIcon(shape, color, boxx, boxy):
 
 
 def getShapeAndColor(board, boxx, boxy):
-
+    # получаем форму board[boxx][boxy][0]
+    # получаем цвет board[boxx][boxy][1]
 
     return board[boxx][boxy][0], board[boxx][boxy][1]
 
 
 def drawBoxCovers(board, boxes, coverage):
-
+    # список карточек для отрисовки
+    # отражает закрашенные и не закрашенные
 
     for box in boxes:
         pygame.draw.rect(display, (0, 0, 0), (boxPos(box[0], box[1])[0], boxPos(box[0], box[1])[1], BOXSIZE, BOXSIZE))
@@ -156,7 +159,7 @@ def drawBoxCovers(board, boxes, coverage):
 
 
 def showBoxes(board, boxesToShow):
-
+    # показывает карточки перед игрой
 
     for coverage in range(BOXSIZE, (-SPEEDDEMONSTRATION) - 1, - SPEEDDEMONSTRATION):
         drawBoxCovers(board, boxesToShow, coverage)
@@ -165,40 +168,40 @@ def showBoxes(board, boxesToShow):
 
 
 def openBoxAnim(board, boxesToReveal):
-
+    # открытие карточки
 
     for coverage in range(BOXSIZE, (-SPEEDDEMONSTRATION) - 1, - SPEEDDEMONSTRATION):
         drawBoxCovers(board, boxesToReveal, coverage)
 
 
 def closeBoxAnim(board, boxesToCover):
-
+    # закрытие карточки
 
     for coverage in range(0, BOXSIZE + SPEEDDEMONSTRATION, SPEEDDEMONSTRATION):
         drawBoxCovers(board, boxesToCover, coverage)
 
 
 def drawBoard(board, revealed):
-
+    # отрисовка доски и карточек в обоих состояниях
 
     for boxx in range(BOARDWIDTH):
         for boxy in range(BOARDHEIGHT):
             if not revealed[boxx][boxy]:
-
+                # отрисовка закрытой карточки
 
                 pygame.draw.rect(display, (255, 255, 255),
                                  (boxPos(boxx, boxy)[0], boxPos(boxx, boxy)[1], BOXSIZE, BOXSIZE))
 
             else:
 
-
+                # отрисовка открытой карточки
 
                 shape, color = getShapeAndColor(board, boxx, boxy)
                 drawIcon(shape, color, boxx, boxy)
 
 
 def startGame(board):
-
+    # первоначальная отрисовка всего
 
     coveredBoxes = generateRevealedBoxesData(False)
     boxes = []
@@ -211,7 +214,7 @@ def startGame(board):
 
 
 def hasWon(revealedBoxes):
-
+    # проверка на выигрыш
 
     for i in revealedBoxes:
         if False in i:
@@ -248,13 +251,15 @@ while running:
 
     boxx, boxy = getBoxAtPixel(mousePosX, mousePosY)
     if boxx != None and boxy != None:
+        # получение клика по карточке и его обработка
 
+        # если это закрытая карточка
 
         if not revealedBoxes[boxx][boxy] and mouseClicked:
             openBoxAnim(mainBoard, [(boxx, boxy)])
             revealedBoxes[boxx][boxy] = True
 
-
+            # выбор первой карты
 
             if firstSelection == None:
                 firstSelection = (boxx, boxy)
@@ -264,7 +269,7 @@ while running:
                 icon1shape, icon1color = getShapeAndColor(mainBoard, firstSelection[0], firstSelection[1])
                 icon2shape, icon2color = getShapeAndColor(mainBoard, boxx, boxy)
 
-
+                # если не совпадают
 
                 if icon1shape != icon2shape or icon1color != icon2color:
 
@@ -274,7 +279,7 @@ while running:
                     revealedBoxes[boxx][boxy] = False
 
                 elif hasWon(revealedBoxes):
-
+                    # сброс всего при выигрыше
 
                     mainBoard = getRandomizedBoard()
                     revealedBoxes = generateRevealedBoxesData(False)
