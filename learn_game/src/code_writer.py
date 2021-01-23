@@ -126,6 +126,10 @@ class code_writer:
                 elif(i==257):
                     if(self.caret_pos_in_text>0):
                         self.caret_pos_in_text-=1
+                elif(i==258):
+                    self.vertical_caret_movement('up')
+                elif(i==259):
+                    self.vertical_caret_movement('down')
                 else:
                     q=len(self.code)
                     self.code=self.code[:self.caret_pos_in_text:]+keys[i][2]+self.code[self.caret_pos_in_text::]
@@ -188,6 +192,60 @@ class code_writer:
         if(y==0):
             xi=self.font.render(self.code[i+1:x+1:],True,(0,0,0)).get_width()
         return [xi,y]
+
+    def vertical_caret_movement(self,s):
+        ind=self.caret_pos_in_text
+        col=0
+        if(s=='up'):
+            if(ind>len(self.code)-1):
+                ind-=1
+            while(ind<len(self.code)-1 and self.code[ind]!='\n'):
+                ind+=1
+                col+=1
+            ind=self.caret_pos_in_text
+            if(ind>len(self.code)-1 or self.code[ind]=='\n'):
+                ind-=1
+            while(ind>0 and self.code[ind]!='\n'):
+                ind-=1
+            ind1=ind-1
+            for i in range(col):
+                ind-=1
+                if(ind<=0):
+                    self.caret_pos_in_text=0
+                    return
+                elif(self.code[ind]=='\n'):
+                    self.caret_pos_in_text=ind1
+                    return
+            if(col==0):
+                self.caret_pos_in_text=ind-1
+            else:
+                self.caret_pos_in_text=ind
+        else:
+            if(ind>len(self.code)-1):
+                return
+            if(self.code[ind]=='\n'):
+                ind-=1
+            while(ind>0 and self.code[ind]!='\n'):
+                ind-=1
+                col+=1
+            if(self.code[self.caret_pos_in_text]=='\n'):
+                col+=1
+            ind=self.caret_pos_in_text
+            while(ind<len(self.code)-1 and self.code[ind]!='\n'):
+                ind+=1
+            ind1=ind+1
+            for i in range(col):
+                ind+=1
+                if(ind>=len(self.code)-1):
+                    self.caret_pos_in_text=ind-1
+                    return
+                elif(self.code[ind]=='\n' or ind==len(self.code)-1):
+                    self.caret_pos_in_text=ind
+                    return
+            if(col==0):
+                self.caret_pos_in_text=ind+1
+            else:
+                self.caret_pos_in_text=ind
 
     def block(self):
         self.is_block=True
