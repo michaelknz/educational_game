@@ -13,6 +13,9 @@ class start_screen(pygame.sprite.Sprite):
         self.math_but=button("res/buttons.png")
         self.math_but.add_button((190,49),(190,45,380,95),"Mathematics")
         self.math_but.add_button((190,45),(0,50,190,95),"Mathematics")
+        self.memo_but=button("res/buttons.png")
+        self.memo_but.add_button((190,49),(190,45,380,95),"Memo")
+        self.memo_but.add_button((190,45),(0,50,190,95),"Memo")
         self.font=pygame.font.SysFont('Corbel',100)
         self.title="Learning"
 
@@ -36,5 +39,10 @@ class start_screen(pygame.sprite.Sprite):
             return 2
         else:
             self.math_but.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2))
+        if(is_clicked and self.memo_but.check_pos_in_button(pos)):
+            self.memo_but.draw_button(self.screen,1,(self.screen.get_width()//2,self.screen.get_height()//2+75))
+            return 3
+        else:
+            self.memo_but.draw_button(self.screen,0,(self.screen.get_width()//2,self.screen.get_height()//2+75))
         return 0
 

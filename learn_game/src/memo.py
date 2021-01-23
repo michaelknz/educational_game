@@ -9,12 +9,15 @@ class memo_game:
 
         self.screen = screen
 
+        self.WIDTH=screen.get_width()
+        self.HEIGHT=screen.get_height()
+
         self.SPEEDDEMONSTRATION = 1
         self.BOXSIZE = 40  # размер карточек
         self.GAPSIZE = 10  # отступы между карточками
 
-        self.XMARGIN = int((WIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
-        self.YMARGIN = int((HEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
+        self.XMARGIN = int((self.WIDTH - (self.BOARDWIDTH * (self.BOXSIZE + self.GAPSIZE))) / 2)
+        self.YMARGIN = int((self.HEIGHT - (self.BOARDHEIGHT * (self.BOXSIZE + self.GAPSIZE))) / 2)
 
         # радуга палитра
         self.RED = (255, 0, 0)
@@ -36,21 +39,27 @@ class memo_game:
         self.OVAL = 'oval'
 
         # цвета и формы
-        self.ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
-        self.ALLSHAPES = (CIRCLE, SQUARE, DIAMOND, LINES, OVAL)
+        self.ALLCOLORS = (self.RED, self.GREEN, self.BLUE, self.YELLOW, self.ORANGE, self.PURPLE, self.CYAN)
+        self.ALLSHAPES = (self.CIRCLE, self.SQUARE, self.DIAMOND, self.LINES, self.OVAL)
+
+        self.mainBoard = self.getRandomizedBoard()
+        self.revealedBoxes = self.generateRevealedBoxesData(False)
+        self.firstSelection = None
+
+        self.is_start=True
 
     def getRandomizedBoard(self):
         # создание случайного набора возможных комбинаций форм и цветов
 
         icons = []
-        for color in ALLCOLORS:
-            for shape in ALLSHAPES:
+        for color in self.ALLCOLORS:
+            for shape in self.ALLSHAPES:
                 icons.append((shape, color))
         random.shuffle(icons)
 
         # создание нужного количества пар и перемешивание их
 
-        numIconsUsed = int(BOARDWIDTH * BOARDHEIGHT / 2)
+        numIconsUsed = int(self.BOARDWIDTH * self.BOARDHEIGHT / 2)
         icons = icons[:numIconsUsed] * 2
         random.shuffle(icons)
 
@@ -58,9 +67,9 @@ class memo_game:
         # при этом список иконок сокращаем
 
         board = []
-        for x in range(BOARDWIDTH):
+        for x in range(self.BOARDWIDTH):
             column = []
-            for y in range(BOARDHEIGHT):
+            for y in range(self.BOARDHEIGHT):
                 column.append(icons[0])
                 del icons[0]
             board.append(column)
@@ -70,24 +79,24 @@ class memo_game:
     def generateRevealedBoxesData(self, val):
         # cоздание списка еще скрытых карточек
         revealedBoxes = []
-        for i in range(BOARDWIDTH):
-            revealedBoxes.append([val] * BOARDHEIGHT)
+        for i in range(self.BOARDWIDTH):
+            revealedBoxes.append([val] * self.BOARDHEIGHT)
         return revealedBoxes
 
     def boxPos(self,boxx, boxy):
         # преобразование координат доски в пиксельные координаты
 
-        bX = boxx * (BOXSIZE + GAPSIZE) + XMARGIN
-        bY = boxy * (BOXSIZE + GAPSIZE) + YMARGIN
+        bX = boxx * (self.BOXSIZE + self.GAPSIZE) + self.XMARGIN
+        bY = boxy * (self.BOXSIZE + self.GAPSIZE) + self.YMARGIN
 
         return (bX, bY)
 
     def getBoxAtPixel(self, x, y):
         # проверка наличия карточки на месте крысы
 
-        for boxx in range(BOARDWIDTH):
-            for boxy in range(BOARDHEIGHT):
-                boxRect = pygame.Rect(boxPos(boxx, boxy)[0], boxPos(boxx, boxy)[1], BOXSIZE, BOXSIZE)
+        for boxx in range(self.BOARDWIDTH):
+            for boxy in range(self.BOARDHEIGHT):
+                boxRect = pygame.Rect(self.boxPos(boxx, boxy)[0], self.boxPos(boxx, boxy)[1], self.BOXSIZE, self.BOXSIZE)
                 if boxRect.collidepoint(x, y):
                     return (boxx, boxy)
 
@@ -96,33 +105,33 @@ class memo_game:
     def drawIcon(self, shape, color, boxx, boxy):
         # отрисовываем фигурки
 
-        if shape == CIRCLE:
-            pygame.draw.circle(screen, color,
-                               (boxPos(boxx, boxy)[0] + int(BOXSIZE * 0.5), boxPos(boxx, boxy)[1] + int(BOXSIZE * 0.5)),
-                               int(BOXSIZE * 0.5) - 5)
+        if shape == self.CIRCLE:
+            pygame.draw.circle(self.screen, color,
+                               (self.boxPos(boxx, boxy)[0] + int(self.BOXSIZE * 0.5), self.boxPos(boxx, boxy)[1] + int(self.BOXSIZE * 0.5)),
+                               int(self.BOXSIZE * 0.5) - 5)
 
-        elif shape == SQUARE:
-            pygame.draw.rect(screen, color, (
-                boxPos(boxx, boxy)[0] + int(BOXSIZE * 0.25), boxPos(boxx, boxy)[1] + int(BOXSIZE * 0.25),
-                BOXSIZE - int(BOXSIZE * 0.5), BOXSIZE - int(BOXSIZE * 0.5)))
+        elif shape == self.SQUARE:
+            pygame.draw.rect(self.screen, color, (
+                self.boxPos(boxx, boxy)[0] + int(self.BOXSIZE * 0.25), self.boxPos(boxx, boxy)[1] + int(self.BOXSIZE * 0.25),
+                self.BOXSIZE - int(self.BOXSIZE * 0.5), self.BOXSIZE - int(self.BOXSIZE * 0.5)))
 
-        elif shape == DIAMOND:
-            pygame.draw.polygon(screen, color, (
-                (boxPos(boxx, boxy)[0] + int(BOXSIZE * 0.5), boxPos(boxx, boxy)[1]),
-                (boxPos(boxx, boxy)[0] + BOXSIZE - 1, boxPos(boxx, boxy)[1] + int(BOXSIZE * 0.5)),
-                (boxPos(boxx, boxy)[0] + int(BOXSIZE * 0.5), boxPos(boxx, boxy)[1] + BOXSIZE - 1),
-                (boxPos(boxx, boxy)[0], boxPos(boxx, boxy)[1] + int(BOXSIZE * 0.5))))
+        elif shape == self.DIAMOND:
+            pygame.draw.polygon(self.screen, color, (
+                (self.boxPos(boxx, boxy)[0] + int(self.BOXSIZE * 0.5), self.boxPos(boxx, boxy)[1]),
+                (self.boxPos(boxx, boxy)[0] + self.BOXSIZE - 1, self.boxPos(boxx, boxy)[1] + int(self.BOXSIZE * 0.5)),
+                (self.boxPos(boxx, boxy)[0] + int(self.BOXSIZE * 0.5), self.boxPos(boxx, boxy)[1] + self.BOXSIZE - 1),
+                (self.boxPos(boxx, boxy)[0], self.boxPos(boxx, boxy)[1] + int(self.BOXSIZE * 0.5))))
 
-        elif shape == LINES:
-            for i in range(0, BOXSIZE, 4):
-                pygame.draw.line(screen, color, (boxPos(boxx, boxy)[0], boxPos(boxx, boxy)[1] + i),
-                                 (boxPos(boxx, boxy)[0] + i, boxPos(boxx, boxy)[1]))
-                pygame.draw.line(screen, color, (boxPos(boxx, boxy)[0] + i, boxPos(boxx, boxy)[1] + BOXSIZE - 1),
-                                 (boxPos(boxx, boxy)[0] + BOXSIZE - 1, boxPos(boxx, boxy)[1] + i))
+        elif shape == self.LINES:
+            for i in range(0, self.BOXSIZE, 4):
+                pygame.draw.line(self.screen, color, (self.boxPos(boxx, boxy)[0], self.boxPos(boxx, boxy)[1] + i),
+                                 (self.boxPos(boxx, boxy)[0] + i, self.boxPos(boxx, boxy)[1]))
+                pygame.draw.line(self.screen, color, (self.boxPos(boxx, boxy)[0] + i, self.boxPos(boxx, boxy)[1] + self.BOXSIZE - 1),
+                                 (self.boxPos(boxx, boxy)[0] + self.BOXSIZE - 1, self.boxPos(boxx, boxy)[1] + i))
 
-        elif shape == OVAL:
-            pygame.draw.ellipse(screen, color, (
-                boxPos(boxx, boxy)[0], boxPos(boxx, boxy)[1] + int(BOXSIZE * 0.25), BOXSIZE, int(BOXSIZE * 0.5)))
+        elif shape == self.OVAL:
+            pygame.draw.ellipse(self.screen, color, (
+                self.boxPos(boxx, boxy)[0], self.boxPos(boxx, boxy)[1] + int(self.BOXSIZE * 0.25), self.BOXSIZE, int(self.BOXSIZE * 0.5)))
 
     def getShapeAndColor(self, board, boxx, boxy):
         # получаем форму board[boxx][boxy][0]
@@ -133,69 +142,69 @@ class memo_game:
     def drawBoxCovers(self, board, boxes, coverage):
         # список карточек для отрисовки
         # отражает закрашенные и не закрашенные
-
+        clock=pygame.time.Clock()
         for box in boxes:
-            pygame.draw.rect(screen, (0, 0, 0),
-                             (boxPos(box[0], box[1])[0], boxPos(box[0], box[1])[1], BOXSIZE, BOXSIZE))
-            shape, color = getShapeAndColor(board, box[0], box[1])
-            drawIcon(shape, color, box[0], box[1])
+            pygame.draw.rect(self.screen, (0, 0, 0),
+                             (self.boxPos(box[0], box[1])[0], self.boxPos(box[0], box[1])[1], self.BOXSIZE, self.BOXSIZE))
+            shape, color = self.getShapeAndColor(board, box[0], box[1])
+            self.drawIcon(shape, color, box[0], box[1])
 
             if coverage > 0:
-                pygame.draw.rect(screen, (255, 255, 255),
-                                 (boxPos(box[0], box[1])[0], boxPos(box[0], box[1])[1], coverage, BOXSIZE))
+                pygame.draw.rect(self.screen, (255, 255, 255),
+                                 (self.boxPos(box[0], box[1])[0], self.boxPos(box[0], box[1])[1], coverage, self.BOXSIZE))
+        pygame.display.flip()
+        clock.tick(60)
 
-        pygame.screen.update()
-        clock.tick(FPS)
 
     def showBoxes(self, board, boxesToShow):
         # показывает карточки перед игрой
 
-        for coverage in range(BOXSIZE, (-SPEEDDEMONSTRATION) - 1, - SPEEDDEMONSTRATION):
-            drawBoxCovers(board, boxesToShow, coverage)
-        for coverage in range(0, BOXSIZE + SPEEDDEMONSTRATION, SPEEDDEMONSTRATION):
-            drawBoxCovers(board, boxesToShow, coverage)
+        for coverage in range(self.BOXSIZE, (-self.SPEEDDEMONSTRATION) - 1, - self.SPEEDDEMONSTRATION):
+            self.drawBoxCovers(board, boxesToShow, coverage)
+        for coverage in range(0, self.BOXSIZE + self.SPEEDDEMONSTRATION, self.SPEEDDEMONSTRATION):
+            self.drawBoxCovers(board, boxesToShow, coverage)
 
     def openBoxAnim(self, board, boxesToReveal):
         # открытие карточки
 
-        for coverage in range(BOXSIZE, (-SPEEDDEMONSTRATION) - 1, - SPEEDDEMONSTRATION):
-            drawBoxCovers(board, boxesToReveal, coverage)
+        for coverage in range(self.BOXSIZE, (-self.SPEEDDEMONSTRATION) - 1, - self.SPEEDDEMONSTRATION):
+            self.drawBoxCovers(board, boxesToReveal, coverage)
 
     def closeBoxAnim(self, board, boxesToCover):
         # закрытие карточки
 
-        for coverage in range(0, BOXSIZE + SPEEDDEMONSTRATION, SPEEDDEMONSTRATION):
-            drawBoxCovers(board, boxesToCover, coverage)
+        for coverage in range(0, self.BOXSIZE + self.SPEEDDEMONSTRATION, self.SPEEDDEMONSTRATION):
+            self.drawBoxCovers(board, boxesToCover, coverage)
 
     def drawBoard(self, board, revealed):
         # отрисовка доски и карточек в обоих состояниях
 
-        for boxx in range(BOARDWIDTH):
-            for boxy in range(BOARDHEIGHT):
+        for boxx in range(self.BOARDWIDTH):
+            for boxy in range(self.BOARDHEIGHT):
                 if not revealed[boxx][boxy]:
                     # отрисовка закрытой карточки
 
-                    pygame.draw.rect(screen, (255, 255, 255),
-                                     (boxPos(boxx, boxy)[0], boxPos(boxx, boxy)[1], BOXSIZE, BOXSIZE))
+                    pygame.draw.rect(self.screen, (255, 255, 255),
+                                     (self.boxPos(boxx, boxy)[0], self.boxPos(boxx, boxy)[1], self.BOXSIZE, self.BOXSIZE))
 
                 else:
 
                     # отрисовка открытой карточки
 
-                    shape, color = getShapeAndColor(board, boxx, boxy)
-                    drawIcon(shape, color, boxx, boxy)
+                    shape, color = self.getShapeAndColor(board, boxx, boxy)
+                    self.drawIcon(shape, color, boxx, boxy)
 
     def startGame(self, board):
         # первоначальная отрисовка всего
 
-        coveredBoxes = generateRevealedBoxesData(False)
+        coveredBoxes = self.generateRevealedBoxesData(False)
         boxes = []
-        for x in range(BOARDWIDTH):
-            for y in range(BOARDHEIGHT):
+        for x in range(self.BOARDWIDTH):
+            for y in range(self.BOARDHEIGHT):
                 boxes.append((x, y))
         random.shuffle(boxes)
-        drawBoard(board, coveredBoxes)
-        showBoxes(board, boxes)
+        self.drawBoard(board, coveredBoxes)
+        self.showBoxes(board, boxes)
 
     def hasWon(self, revealedBoxes):
         # проверка на выигрыш
@@ -205,75 +214,52 @@ class memo_game:
                 return False
         return True
 
-    def update(self):
-        mainBoard = getRandomizedBoard()
-        revealedBoxes = generateRevealedBoxesData(False)
-        firstSelection = None
+    def update(self, is_clicked, pos):
+        self.screen.fill((0,0,0))
+        if(self.is_start):
+            self.startGame(self.mainBoard)
+            self.is_start=False
+            return 3
+        self.drawBoard(self.mainBoard, self.revealedBoxes)
 
-        screen.fill((0, 0, 0))
-        startGame(mainBoard)
-        mousePosX = 0
-        mousePosY = 0
-
-        running = True
-        while running:
-            mouseClicked = False
-            screen.fill((0, 0, 0))
-
-            drawBoard(mainBoard, revealedBoxes)
-
-            for event in pygame.event.get():
-                if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                    running = False
-
-                elif event.type == MOUSEMOTION:
-                    mousePosX, mousePosY = event.pos
-
-                elif event.type == MOUSEBUTTONUP:
-                    mousePosX, mousePosY = event.pos
-                    mouseClicked = True
-
-            boxx, boxy = getBoxAtPixel(mousePosX, mousePosY)
-            if boxx != None and boxy != None:
+        boxx, boxy = self.getBoxAtPixel(pos[0], pos[1])
+        if boxx != None and boxy != None:
                 # получение клика по карточке и его обработка
 
                 # если это закрытая карточка
 
-                if not revealedBoxes[boxx][boxy] and mouseClicked:
-                    openBoxAnim(mainBoard, [(boxx, boxy)])
-                    revealedBoxes[boxx][boxy] = True
+            if not self.revealedBoxes[boxx][boxy] and is_clicked:
+                self.openBoxAnim(self.mainBoard, [(boxx, boxy)])
+                self.revealedBoxes[boxx][boxy] = True
 
                     # выбор первой карты
 
-                    if firstSelection == None:
-                        firstSelection = (boxx, boxy)
+                if self.firstSelection == None:
+                    self.firstSelection = (boxx, boxy)
 
-                    else:
+                else:
 
-                        icon1shape, icon1color = getShapeAndColor(mainBoard, firstSelection[0], firstSelection[1])
-                        icon2shape, icon2color = getShapeAndColor(mainBoard, boxx, boxy)
+                    icon1shape, icon1color = self.getShapeAndColor(self.mainBoard, self.firstSelection[0], self.firstSelection[1])
+                    icon2shape, icon2color = self.getShapeAndColor(self.mainBoard, boxx, boxy)
 
                         # если не совпадают
 
-                        if icon1shape != icon2shape or icon1color != icon2color:
+                    if icon1shape != icon2shape or icon1color != icon2color:
 
-                            pygame.time.wait(500)
-                            closeBoxAnim(mainBoard, [(firstSelection[0], firstSelection[1]), (boxx, boxy)])
-                            revealedBoxes[firstSelection[0]][firstSelection[1]] = False
-                            revealedBoxes[boxx][boxy] = False
+                        pygame.time.wait(500)
+                        self.closeBoxAnim(self.mainBoard, [(self.firstSelection[0], self.firstSelection[1]), (boxx, boxy)])
+                        self.revealedBoxes[self.firstSelection[0]][self.firstSelection[1]] = False
+                        self.revealedBoxes[boxx][boxy] = False
 
-                        elif hasWon(revealedBoxes):
+                    elif self.hasWon(self.revealedBoxes):
                             # сброс всего при выигрыше
 
-                            mainBoard = getRandomizedBoard()
-                            revealedBoxes = generateRevealedBoxesData(False)
-                            drawBoard(mainBoard, revealedBoxes)
-                            pygame.screen.update()
+                        self.mainBoard = self.getRandomizedBoard()
+                        self.revealedBoxes = self.generateRevealedBoxesData(False)
+                        self.drawBoard(self.mainBoard, self.revealedBoxes)
 
-                            pygame.time.wait(1000)
-                            startGame(mainBoard)
+                        pygame.time.wait(1000)
+                        self.startGame(self.mainBoard)
 
-                        firstSelection = None
-
-            pygame.screen.update()
-            clock.tick(FPS)
+                    self.firstSelection = None
+        return 3
