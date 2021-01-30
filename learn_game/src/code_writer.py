@@ -19,8 +19,9 @@ class code_writer:
         self.special=set()
         self.classes=set()
         self.method=set()
+        self.vars=set()
         self.divisors=set([' ','(',')','.',':'])
-        self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100),'method':(255,200,150),'class':(150,255,200)}
+        self.colors={'special':(255,150,250),'digits':(0,255,0),'normal':(255,255,255),'divisors':(150,250,255),'str_num':(100,100,100),'method':(255,200,150),'class':(150,255,200),'vars':(255,255,0)}
         self.is_block=False
         self.is_in_set=True
 
@@ -73,6 +74,8 @@ class code_writer:
                     color=self.colors['class']
                 elif(s in self.method):
                     color=self.colors['method']
+                elif(s in self.vars):
+                    color=self.colors['vars']
                 else:
                     if(s!=''):
                         self.is_in_set=False
@@ -99,6 +102,8 @@ class code_writer:
                 color=self.colors['class']
             elif(s in self.method):
                 color=self.colors['method']
+            elif(s in self.vars):
+                color=self.colors['vars']
             else:
                 if(s!=''):
                     self.is_in_set=False
@@ -114,6 +119,8 @@ class code_writer:
                 if(i==8 and len(self.code)!=0 and self.caret_pos_in_text>0):
                     self.code=self.code[:self.caret_pos_in_text-1:]+self.code[self.caret_pos_in_text::]
                     self.caret_pos_in_text-=1
+                elif(i==8):
+                    pass
                 elif(i==13):
                     self.code=self.code[:self.caret_pos_in_text:]+'\n'+self.code[self.caret_pos_in_text::]
                     self.caret_pos_in_text+=1
@@ -170,10 +177,11 @@ class code_writer:
             j+=1
             y+=self.font.render('1',True,(0,0,0)).get_height()*(1.3)
 
-    def set_lighting(self,s=set(),c=set(),m=set()):
+    def set_lighting(self,s=set(),c=set(),m=set(),v=set()):
         self.special=s.copy()
         self.classes=c.copy()
         self.method=m.copy()
+        self.vars=v.copy()
         
     def draw_ed(self,keys,is_finished):
         self.draw_bg()
@@ -197,6 +205,8 @@ class code_writer:
         ind=self.caret_pos_in_text
         col=0
         if(s=='up'):
+            if(self.caret_pos_in_text==0):
+                return
             if(ind>len(self.code)-1):
                 ind-=1
             while(ind<len(self.code)-1 and self.code[ind]!='\n'):

@@ -1,5 +1,6 @@
 import random, pygame, sys
 from pygame.locals import *
+from button import button
 
 
 class memo_game:
@@ -47,6 +48,22 @@ class memo_game:
         self.firstSelection = None
 
         self.is_start=True
+        self.return_button=button("res/button_blue.png")
+        self.return_button.add_button((49,48),(339,95,388,143),'',(255,255,255))
+        self.return_button.add_button((49,45),(290,95,340,140),'',(255,255,255))
+        self.return_button.set_picture('res/icons.png',(4*51-5,51+5,5*51-5,2*51+5),(40,40))
+        self.return_button.draw_button(self.screen,0,(1500,700))
+
+    def draw_button(self,is_clicked,pos):
+        if(is_clicked and self.return_button.check_pos_in_button(pos)):
+            self.return_button.draw_button(self.screen,1,(1500,700))
+            self.is_start=True
+            self.mainBoard = self.getRandomizedBoard()
+            self.revealedBoxes = self.generateRevealedBoxesData(False)
+            return 0
+        else:
+            self.return_button.draw_button(self.screen,0,(1500,700))
+            return 3
 
     def getRandomizedBoard(self):
         # создание случайного набора возможных комбинаций форм и цветов
@@ -262,4 +279,4 @@ class memo_game:
                         self.startGame(self.mainBoard)
 
                     self.firstSelection = None
-        return 3
+        return self.draw_button(is_clicked,pos)

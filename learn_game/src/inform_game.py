@@ -4,6 +4,8 @@ from inf_l_1 import inf_l_1
 from inf_l_2 import inf_l_2
 from inf_l_3 import inf_l_3
 from inf_l_4 import inf_l_4
+from inf_l_5 import inf_l_5
+from inf_l_6 import inf_l_6
 
 class inform_game(object):
     def __init__(self,screen,image_path):
@@ -18,7 +20,7 @@ class inform_game(object):
         self.next_level=0
 
     def init_buttons(self):
-        for i in range(4):
+        for i in range(6):
             self.buttons.append(button("res/button_blue.png"))
             self.buttons[i].add_button((49,48),(339,95,388,143),str(i+1),(255,255,255))
             self.buttons[i].add_button((49,45),(290,95,340,140),str(i+1),(255,255,255))
@@ -36,17 +38,20 @@ class inform_game(object):
         self.levels.append(inf_l_2(self.screen,(150,100)))
         self.levels.append(inf_l_3(self.screen,(150,100)))
         self.levels.append(inf_l_4(self.screen,(150,100)))
+        self.levels.append(inf_l_5(self.screen,(150,100)))
+        self.levels.append(inf_l_6(self.screen,(150,100)))
 
     def draw_bg(self):
         self.screen.blit(self.bg,(0,0))
 
     def draw_buttons(self,is_clicked,pos):
+        x=(self.screen.get_width()-300)//2
         for i in range(len(self.buttons)):
             if(is_clicked and self.buttons[i].check_pos_in_button(pos)):
                 self.next_level=i+1
-                self.buttons[i].draw_button(self.screen,1,(100+i*100,100))
+                self.buttons[i].draw_button(self.screen,1,(x+(i%3)*100,300+(i//3)*100))
             else:
-                self.buttons[i].draw_button(self.screen,0,(100+i*100,100))
+                self.buttons[i].draw_button(self.screen,0,(x+(i%3)*100,300+(i//3)*100))
         if(is_clicked and self.return_button.check_pos_in_button(pos)):
             self.next_level=-1
             self.return_button.draw_button(self.screen,1,(self.screen.get_width()-100,self.screen.get_height()-100))
