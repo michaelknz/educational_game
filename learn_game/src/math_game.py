@@ -44,7 +44,7 @@ class math_game:
         self.is_right = False
         self.fin_scr = message_box(self.screen)
         self.is_over = False
-        self.is_first = False
+        self.is_first = True
         self.is_f_f = True
         self.out = -1
         self.new_level(True)
@@ -233,6 +233,7 @@ class math_game:
         self.is_right = False
         if (is_clicked and self.return_but.check_pos_in_button(pos) and not self.is_over):
             self.return_but.draw_button(self.screen, 1, self.return_but.pos)
+            self.is_first=True
             return 0
         else:
             self.return_but.draw_button(self.screen, 0, self.return_but.pos)
